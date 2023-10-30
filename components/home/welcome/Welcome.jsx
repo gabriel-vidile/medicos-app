@@ -13,7 +13,7 @@ import { useRouter } from 'expo-router'
 import { icons, SIZES } from '../../../constants'
 
 const jobTypes = [
-  "Full-time", "Part-time", "Contractor"
+  "Cardiologista", "Pediatra", "Otorrinolaringologista"
 ]
 
 
