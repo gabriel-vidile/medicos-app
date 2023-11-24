@@ -3,10 +3,15 @@ import { SafeAreaView, ScrollView, Text, View } from "react-native";
 import { Stack, useRouter } from "expo-router";
 
 import { COLORS, icons, images, SIZES } from "../constants";
-import Auth from "../components/auth/auth";
+import {
+    Nearbyjobs,
+    Popularjobs,
+    ScreenHeaderBtn,
+    Welcome,
+} from "../components";
 
 
-const HomePage = () => {
+const Home = () => {
     const router = useRouter();
 
     return (
@@ -15,15 +20,23 @@ const HomePage = () => {
                 options={{
                     headerStyle: { backgroundColor: COLORS.background },
                     headerShadowVisible: false,
+                    headerLeft: () => (
+                        <ScreenHeaderBtn iconUrl={icons.menu} dimension='60%' />
+                    ),
+                    headerRight: () => (
+                        <ScreenHeaderBtn iconUrl={images.profile} dimension='100%' />
+                    ),
                     headerTitle: "",
                 }}
             />
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={{ flex: 1, padding: SIZES.medium }}>
-                    <Auth />
+                    <Welcome />
+                    <Popularjobs />
+                    <Nearbyjobs />
                 </View>
             </ScrollView>
         </SafeAreaView>
     )
 }
-export default HomePage;
+export default Home;

@@ -11,19 +11,21 @@ import { useState } from 'react'
 import styles from './welcome.style'
 import { useRouter } from 'expo-router'
 import { icons, SIZES } from '../../../constants'
+import { useAppContext } from '../../../appContext/appContext'
 
 const jobTypes = [
   "Cardiologista", "Pediatra", "Otorrinolaringologista"
 ]
 
-
 const Welcome = () => {
+  const { userData } = useAppContext();
+
   const router = useRouter();
   const [activeJobType, setActiveJobType] = useState("Full-time");
   return (
     <View>
       <View style={styles.container}>
-        <Text style={styles.userName}>Olá Gabriel</Text>
+        <Text style={styles.userName}>Olá {userData?.user_full_name}</Text>
         <Text style={styles.welcomeMessage}>Ache o médico perfeito</Text>
 
       </View>
