@@ -69,7 +69,7 @@ const ProfileComponent = ({ userData }) => {
         });
 
         if (!result.canceled) {
-            setImage(result.uri);
+            setImage(result.assets[0].uri);
         }
     };
     function letrasAleatorias(numero) {
@@ -86,7 +86,6 @@ const ProfileComponent = ({ userData }) => {
     const updateImage = async () => {
         try {
             if (image) {
-                const fileExtension = image.split('.').pop();
                 const response = await fetch(image);
                 const blob = await response.blob();
 
@@ -138,7 +137,7 @@ const ProfileComponent = ({ userData }) => {
                 <Text style={styles.textSecondary}>Atualizar imagem</Text>
             </Pressable>}
             <View style={styles.flex}>
-                <Text style={styles.label}>Nome de Usuário: {userData.user_name}</Text>
+
                 <Text style={styles.label}>Nome Completo: {userData.user_full_name}</Text>
                 <Text style={styles.label}>Consultas Marcadas:</Text>
             </View>
@@ -146,7 +145,7 @@ const ProfileComponent = ({ userData }) => {
                 data={consultas}
                 renderItem={renderAppointmentItem}
                 keyExtractor={(item) => item.id.toString()}
-                contentContainerStyle={{ marginRight: SIZES.medium }}
+                contentContainerStyle={{ marginRight: SIZES.medium, marginTop: 20 }}
                 horizontal
             />
         </View>

@@ -57,7 +57,7 @@ const Welcome = () => {
     <View>
       <View style={styles.container}>
         <Text style={styles.userName}>Olá {userData?.user_full_name}</Text>
-        <Text style={styles.welcomeMessage}>Ache o médico perfeito</Text>
+        <Text style={styles.welcomeMessage}>Ache o médico perfeito para você</Text>
       </View>
 
       <View style={styles.searchContainer}>
