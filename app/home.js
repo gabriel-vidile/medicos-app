@@ -9,22 +9,25 @@ import {
     ScreenHeaderBtn,
     Welcome,
 } from "../components";
+import { useAppContext } from "../appContext/appContext";
+import PopularDoctors from "../components/home/popular/PopularDoctors";
 
 
 const Home = () => {
     const router = useRouter();
-
+    const { userData } = useAppContext();
+    const redirectToProfile = () => {
+        router.push("/perfil")
+    }
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
             <Stack.Screen
                 options={{
                     headerStyle: { backgroundColor: COLORS.background },
                     headerShadowVisible: false,
-                    headerLeft: () => (
-                        <ScreenHeaderBtn iconUrl={icons.menu} dimension='60%' />
-                    ),
+
                     headerRight: () => (
-                        <ScreenHeaderBtn iconUrl={images.profile} dimension='100%' />
+                        <ScreenHeaderBtn handlePress={redirectToProfile} iconUrl={userData?.user_photo ? userData?.user_photo : images.profile} dimension='100%' />
                     ),
                     headerTitle: "",
                 }}
@@ -32,8 +35,7 @@ const Home = () => {
             <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={{ flex: 1, padding: SIZES.medium }}>
                     <Welcome />
-                    <Popularjobs />
-                    <Nearbyjobs />
+                    <PopularDoctors />
                 </View>
             </ScrollView>
         </SafeAreaView>

@@ -67,6 +67,9 @@ const styles = StyleSheet.create({
     fontFamily: FONT.medium,
     color: activeJobType === item ? COLORS.secondary : COLORS.gray2,
   }),
+  searchResultsContainer: {
+    marginVertical: SIZES.medium,
+  },
 });
 
 export default styles;

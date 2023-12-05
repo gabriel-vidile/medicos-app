@@ -4,69 +4,58 @@ import * as ImagePicker from 'expo-image-picker';
 import { supabase } from '../../api/supabase';
 import { Stack, useRouter } from "expo-router";
 import { useAppContext } from '../../appContext/appContext';
-
+import * as FileSystem from 'expo-file-system';
 const Cad = () => {
-    const router = useRouter();
-
     const [username, setUsername] = useState('');
     const [name, setName] = useState('');
     const { updateUser } = useAppContext();
-
+    const [trava, setTrava] = useState(false);
     const [password, setPassword] = useState('');
-    const [image, setImage] = useState(null);
+    const router = useRouter();
 
-    const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
 
-        if (!result.canceled) {
-            setImage(result.uri);
-        }
-    };
 
     const handleCadastro = async () => {
         try {
-            // Lógica de cadastro aqui
-            const user = {
+            setTrava(true);
+
+            // Autenticação do Usuário
+            const { user, error: authError } = await supabase.auth.signUp({
+                email: username.toLowerCase(), // Use o e-mail como nome de usuário neste exemplo
+                password,
+                email_confirm: true,
+
+            });
+
+            if (authError) {
+                console.error('Erro ao cadastrar usuário:', authError);
+                setTrava(false);
+                return;
+            }
+            const userData = {
                 user_full_name: name,
-                user_photo: image,
                 user_name: username,
                 user_password: password,
             };
 
-            // Realiza a requisição de cadastro no Supabase
-            const response = await supabase.from('users').upsert([user]);
+            const response = await supabase.from('users').upsert([userData]);
 
-            // Verifica se o cadastro foi bem-sucedido
             if (response.error) {
                 console.error('Erro ao cadastrar usuário no Supabase:', response.error);
+                setTrava(false);
             } else {
                 console.log('Usuário cadastrado com sucesso no Supabase:', response.data);
-                // Limpa os campos após o cadastro bem-sucedido
-                updateUser(user)
-                router.push('/home')
-
-
+                router.push('/home');
             }
         } catch (error) {
             console.error('Erro ao cadastrar usuário:', error.message);
-            router.push('/home')
-            // Adicione lógica adicional para lidar com erros
+            router.push('/');
         }
     };
-
-
     return (
         <View style={styles.container}>
             <Text style={styles.label}>Cadastro</Text>
-            {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-            <Pressable style={styles.button} onPress={pickImage}>
-                <Text style={styles.text}>Escolher Imagem</Text>
-            </Pressable>
+
             <TextInput
                 style={styles.input}
                 placeholder="Nome Completo"
@@ -88,7 +77,7 @@ const Cad = () => {
             />
 
 
-            <Pressable style={styles.buttonSecondary} onPress={handleCadastro}>
+            <Pressable style={styles.buttonSecondary} disabled={trava} onPress={handleCadastro}>
                 <Text style={styles.textSecondary}>Cadastrar</Text>
             </Pressable>
         </View>

@@ -52,7 +52,10 @@ const styles = StyleSheet.create({
         fontFamily: FONT.bold,
         fontSize: SIZES.medium,
         color: COLORS.primary
-    }
+    },
+    searchResultsContainer: {
+        marginVertical: SIZES.medium,
+    },
 });
 
 export default styles;

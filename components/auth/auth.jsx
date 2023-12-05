@@ -7,45 +7,57 @@ import { useAppContext } from '../../appContext/appContext';
 const Auth = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const router = useRouter();
     const { updateUser } = useAppContext();
+    const router = useRouter();
     const handleLogin = async () => {
-        // Lógica de autenticação aqui
-        console.log(`Usuário: ${username}, Senha: ${password}`);
         try {
-            const { data, error } = await supabase
-                .from('users')
-                .select('*')
-                .eq('user_name', username)
-                .eq('user_password', password);
-
+            const { user, error } = await supabase.auth.signInWithPassword({
+                email: username.toLowerCase(), // Supabase Auth usa e-mail para login, ajuste conforme necessário
+                password: password,
+            });
             if (error) {
-                console.error('Erro ao consultar o banco de dados:', error.message);
-                return false;
-            }
-            if (data.length > 0) {
+                console.error('Erro ao autenticar:', error.message);
+            } else {
+                try {
+                    const { data, error } = await supabase
+                        .from('users')
+                        .select('*')
+                        .eq('user_name', username.toLowerCase())
+                        .eq('user_password', password);
 
-                updateUser(data[0]);
-                router.push('/home');
+                    if (error) {
+                        console.error('Erro ao consultar o banco de dados:', error.message);
+                        return false;
+                    }
+                    if (data.length > 0) {
 
+                        updateUser(data[0]);
+                        console.log(data[0])
+                        router.push('/home');
+
+                    }
+                } catch (error) {
+                    console.error('Erro na verificação do usuário:', error.message);
+                    return false;
+                }
             }
         } catch (error) {
-            console.error('Erro na verificação do usuário:', error.message);
-            return false;
+            console.error('Erro geral na autenticação:', error.message);
         }
-
-
     };
+
     const handleCadastro = () => {
-        router.push('/cadastro')
+        // Implemente o fluxo de cadastro conforme necessário]
+        router.push("/cadastro")
     };
+
     return (
         <>
             <View style={styles.container}>
                 <Text style={styles.label}>Entrar</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder="Nome de usuário"
+                    placeholder="E-mail"
                     value={username}
                     onChangeText={setUsername}
                 />
@@ -57,18 +69,17 @@ const Auth = () => {
                     onChangeText={setPassword}
                 />
                 <View style={styles.flex}>
-                    <Pressable style={styles.button} onPress={handleLogin} >
+                    <Pressable style={styles.button} onPress={handleLogin}>
                         <Text style={styles.text}>Entrar</Text>
                     </Pressable>
-                    <Pressable style={styles.buttonSecondary} onPress={handleCadastro} >
+                    <Pressable style={styles.buttonSecondary} onPress={handleCadastro}>
                         <Text style={styles.textSecondary}>Cadastrar</Text>
                     </Pressable>
-
                 </View>
             </View>
         </>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {

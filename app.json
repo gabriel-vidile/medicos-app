@@ -5,9 +5,21 @@
       "bundler": "metro"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-image-picker"
     ],
     "name": "projeto-app",
-    "slug": "projeto-app"
+    "slug": "projeto-app",
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "148a18ee-48c3-4842-afc0-c11d835a8fff"
+      }
+    },
+    "android": {
+      "package": "com.vidilemaster.projetoapp"
+    }
   }
 }
